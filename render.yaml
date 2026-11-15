@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: ai-matrix-api
+    runtime: node
+    plan: free
+    buildCommand: node --check server/index.js
+    startCommand: node server/index.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: 24.22.1
+      - key: MATRIX_HOST
+        value: 0.0.0.0
+      - key: MATRIX_ALLOWED_ORIGIN
+        value: https://edinm2016.github.io
+      - key: MATRIX_CHAT_API_KEY
+        sync: false
+      - key: MATRIX_MODEL
+        sync: false

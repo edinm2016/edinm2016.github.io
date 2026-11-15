@@ -20,6 +20,10 @@ const maxBodyBytes = 2 * 1024 * 1024;
 const chatApiKey = process.env.MATRIX_CHAT_API_KEY ?? process.env.OPENAI_API_KEY ?? "";
 const chatModel = process.env.MATRIX_MODEL ?? "";
 const chatEndpoint = process.env.MATRIX_CHAT_API_URL ?? "https://api.openai.com/v1/responses";
+const allowedOrigin = process.env.MATRIX_ALLOWED_ORIGIN ?? "";
+const rateWindows = new Map();
+const chatRequestLimit = 12;
+const chatWindowMs = 60_000;
 
 function send(response, status, body) {
   response.writeHead(status, { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" });
@@ -48,9 +52,16 @@ function recordEvent(taskId, eventType, payload = {}) {
 
 const server = createServer(async (request, response) => {
   const url = new URL(request.url ?? "/", `http://${request.headers.host ?? `${host}:${port}`}`);
-  if (request.method === "GET" && ["/", "/index.html", "/overview.html", "/app.js", "/styles.css"].includes(url.pathname)) {
+  const origin = request.headers.origin;
+  if (allowedOrigin && origin === allowedOrigin) response.setHeader("access-control-allow-origin", allowedOrigin);
+  if (request.method === "OPTIONS" && ["/api/config", "/api/chat"].includes(url.pathname)) {
+    if (!allowedOrigin || origin !== allowedOrigin) return send(response, 403, { error: { code: "origin_not_allowed", message: "Zahtjev nije dozvoljen." } });
+    response.writeHead(204, { "access-control-allow-origin": allowedOrigin, "access-control-allow-methods": "GET, POST, OPTIONS", "access-control-allow-headers": "content-type, accept", "access-control-max-age": "600", vary: "Origin" });
+    return response.end();
+  }
+  if (request.method === "GET" && ["/", "/index.html", "/overview.html", "/app.js", "/api-config.js", "/styles.css"].includes(url.pathname)) {
     const file = url.pathname === "/" ? "index.html" : url.pathname.slice(1);
-    const contentTypes = { "index.html": "text/html; charset=utf-8", "overview.html": "text/html; charset=utf-8", "app.js": "text/javascript; charset=utf-8", "styles.css": "text/css; charset=utf-8" };
+    const contentTypes = { "index.html": "text/html; charset=utf-8", "overview.html": "text/html; charset=utf-8", "app.js": "text/javascript; charset=utf-8", "api-config.js": "text/javascript; charset=utf-8", "styles.css": "text/css; charset=utf-8" };
     response.writeHead(200, { "content-type": contentTypes[file], "cache-control": "no-cache" });
     return response.end(readFileSync(resolve(projectRoot, file)));
   }
@@ -60,6 +71,7 @@ const server = createServer(async (request, response) => {
   }
 
   if (request.method === "GET" && url.pathname === "/api/config") {
+    if (allowedOrigin && origin !== allowedOrigin) return send(response, 403, { error: { code: "origin_not_allowed", message: "Zahtjev nije dozvoljen." } });
     return send(response, 200, {
       chat_ready: Boolean(chatApiKey && chatModel),
       model: chatApiKey && chatModel ? chatModel : null,
@@ -68,6 +80,16 @@ const server = createServer(async (request, response) => {
   }
 
   if (request.method === "POST" && url.pathname === "/api/chat") {
+    if (allowedOrigin && origin !== allowedOrigin) return send(response, 403, { error: { code: "origin_not_allowed", message: "Zahtjev nije dozvoljen." } });
+    const nowMs = Date.now();
+    // Render appends the connecting client address to X-Forwarded-For.
+    const forwardedFor = String(request.headers["x-forwarded-for"] ?? "").split(",").map((ip) => ip.trim()).filter(Boolean);
+    const clientIp = forwardedFor.at(-1) ?? request.socket.remoteAddress ?? "unknown";
+    const prior = rateWindows.get(clientIp);
+    if (!prior || nowMs - prior.startedAt >= chatWindowMs) rateWindows.set(clientIp, { startedAt: nowMs, count: 1 });
+    else if (prior.count >= chatRequestLimit) return send(response, 429, { error: { code: "rate_limited", message: "Dosegnut je privremeni limit zahtjeva. Pokušaj ponovo za minutu." } });
+    else prior.count += 1;
+    if (rateWindows.size > 5000) for (const [ip, window] of rateWindows) if (nowMs - window.startedAt >= chatWindowMs) rateWindows.delete(ip);
     if (!chatApiKey || !chatModel) {
       return send(response, 503, { error: { code: "provider_not_configured", message: "AI provajder još nije podešen na serveru." } });
     }

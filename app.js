@@ -3,6 +3,8 @@ const MAX_CHATS = 40;
 const MAX_HISTORY = 30;
 const MAX_FILE_BYTES = 25 * 1024;
 const MAX_FILES = 3;
+const API_BASE = String(window.MATRIX_API_BASE ?? "").replace(/\/$/, "");
+const apiUrl = (path) => `${API_BASE}${path}`;
 
 const $ = (selector) => document.querySelector(selector);
 const refs = {
@@ -199,7 +201,7 @@ function setProviderStatus(ready, model = null, reachable = true) {
 
 async function loadProviderStatus() {
   try {
-    const response = await fetch("/api/config", { headers: { accept: "application/json" } });
+    const response = await fetch(apiUrl("/api/config"), { headers: { accept: "application/json" } });
     if (!response.ok) throw new Error("status");
     const config = await response.json();
     setProviderStatus(Boolean(config.chat_ready), config.model ?? null, true);
@@ -276,7 +278,7 @@ async function sendMessage(text) {
   pending.append(icon, dots); refs.messages.append(pending);
 
   try {
-    const response = await fetch("/api/chat", {
+    const response = await fetch(apiUrl("/api/chat"), {
       method: "POST",
       headers: { "content-type": "application/json", accept: "application/json" },
       body: JSON.stringify({ messages: requestMessages, response_style: state.responseStyle }),
