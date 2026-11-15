@@ -1,6 +1,6 @@
 # Initial Backend API Contract
 
-All endpoints use JSON. The API is a proposed contract; no server currently implements it.
+All endpoints use JSON. The local server implements `/health`, task creation, and task reads. Authentication, module execution, cancellation, and the approval endpoint below remain part of the proposed contract and are not implemented.
 
 ## Create a task
 
@@ -22,7 +22,7 @@ Returns `202 Accepted` with `task_id`, `status`, and `created_at`. Tasks move th
 
 `GET /api/tasks/{task_id}`
 
-Returns the task envelope, current plan, module-run statuses, and response when available. It must only return data the authenticated caller is allowed to see.
+The local prototype returns the task envelope, current plan, and event history. A hosted implementation must also enforce caller access and return module-run statuses and the response when available.
 
 ## Request clarification
 

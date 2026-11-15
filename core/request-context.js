@@ -29,12 +29,16 @@ export function createTaskRequest(input) {
 
   const language = SUPPORTED_LANGUAGES.has(input.language) ? input.language : "en";
   const constraints = Array.isArray(input.constraints)
-    ? input.constraints.filter((item) => typeof item === "string" && item.trim() !== "").map((item) => item.trim())
+    ? input.constraints
+      .filter((item) => typeof item === "string" && item.trim() !== "")
+      .slice(0, 50)
+      .map((item) => item.trim().slice(0, 500))
     : [];
+  const conversationId = typeof input.conversationId === "string" ? input.conversationId.trim() : "";
 
   return {
     task_id: crypto.randomUUID(),
-    conversation_id: typeof input.conversationId === "string" ? input.conversationId : null,
+    conversation_id: conversationId ? conversationId.slice(0, 200) : null,
     message: {
       text: input.text.trim(),
       language,
