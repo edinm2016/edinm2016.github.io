@@ -16,7 +16,10 @@ db.exec(readFileSync(resolve(projectRoot, "database/schema.sql"), "utf8"));
 
 const host = process.env.MATRIX_HOST ?? "127.0.0.1";
 const port = Number.parseInt(process.env.PORT ?? "4173", 10);
-const maxBodyBytes = 1024 * 1024;
+const maxBodyBytes = 2 * 1024 * 1024;
+const chatApiKey = process.env.MATRIX_CHAT_API_KEY ?? process.env.OPENAI_API_KEY ?? "";
+const chatModel = process.env.MATRIX_MODEL ?? "";
+const chatEndpoint = process.env.MATRIX_CHAT_API_URL ?? "https://api.openai.com/v1/responses";
 
 function send(response, status, body) {
   response.writeHead(status, { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" });
@@ -45,8 +48,92 @@ function recordEvent(taskId, eventType, payload = {}) {
 
 const server = createServer(async (request, response) => {
   const url = new URL(request.url ?? "/", `http://${request.headers.host ?? `${host}:${port}`}`);
+  if (request.method === "GET" && ["/", "/index.html", "/overview.html", "/app.js", "/styles.css"].includes(url.pathname)) {
+    const file = url.pathname === "/" ? "index.html" : url.pathname.slice(1);
+    const contentTypes = { "index.html": "text/html; charset=utf-8", "overview.html": "text/html; charset=utf-8", "app.js": "text/javascript; charset=utf-8", "styles.css": "text/css; charset=utf-8" };
+    response.writeHead(200, { "content-type": contentTypes[file], "cache-control": "no-cache" });
+    return response.end(readFileSync(resolve(projectRoot, file)));
+  }
+
   if (request.method === "GET" && url.pathname === "/health") {
-    return send(response, 200, { status: "ok", service: "ai-matrix-api", mode: "planning-only" });
+    return send(response, 200, { status: "ok", service: "ai-matrix-api", mode: "planning-and-chat", chat_ready: Boolean(chatApiKey && chatModel) });
+  }
+
+  if (request.method === "GET" && url.pathname === "/api/config") {
+    return send(response, 200, {
+      chat_ready: Boolean(chatApiKey && chatModel),
+      model: chatApiKey && chatModel ? chatModel : null,
+      provider: "OpenAI Responses-compatible API",
+    });
+  }
+
+  if (request.method === "POST" && url.pathname === "/api/chat") {
+    if (!chatApiKey || !chatModel) {
+      return send(response, 503, { error: { code: "provider_not_configured", message: "AI provajder još nije podešen na serveru." } });
+    }
+    try {
+      const body = await readJson(request);
+      if (!body || typeof body !== "object" || Array.isArray(body) || !Array.isArray(body.messages) || body.messages.length === 0 || body.messages.length > 30) {
+        return send(response, 400, { error: { code: "invalid_request", message: "Pošalji između 1 i 30 poruka." } });
+      }
+      const messages = [];
+      let totalChars = 0;
+      for (const message of body.messages) {
+        if (!message || !["user", "assistant"].includes(message.role) || typeof message.content !== "string") {
+          return send(response, 400, { error: { code: "invalid_request", message: "Svaka poruka mora imati ulogu user ili assistant i tekstualni sadržaj." } });
+        }
+        totalChars += message.content.length;
+        if (message.content.length > 20000) {
+          return send(response, 400, { error: { code: "invalid_request", message: "Pojedinačna poruka premašuje 20.000 znakova." } });
+        }
+        if (totalChars > 250000) {
+          return send(response, 400, { error: { code: "invalid_request", message: "Razgovor premašuje dozvoljenu dužinu." } });
+        }
+        messages.push({ role: message.role, content: message.content });
+      }
+      if (messages.at(-1).role !== "user") {
+        return send(response, 400, { error: { code: "invalid_request", message: "Zadnja poruka mora biti korisnička poruka." } });
+      }
+      const style = ["concise", "balanced", "detailed"].includes(body.response_style) ? body.response_style : "balanced";
+      const styleText = {
+        concise: "Odgovaraj kratko, osim ako korisnik traži detalje.",
+        balanced: "Odgovaraj jasno i odmjereno; prilagodi dužinu zahtjevu.",
+        detailed: "Daj detaljne, strukturirane odgovore kada tema to opravdava.",
+      }[style];
+
+      let upstream;
+      try {
+        upstream = await fetch(chatEndpoint, {
+          method: "POST",
+          headers: { authorization: `Bearer ${chatApiKey}`, "content-type": "application/json" },
+          body: JSON.stringify({
+            model: chatModel,
+            instructions: `Ti si AI Matrix Assistant. Odgovaraj na jeziku korisnika, budi koristan, iskren i jasno označi neizvjesnost. ${styleText}`,
+            input: messages,
+            max_output_tokens: 2048,
+            store: false,
+          }),
+          signal: AbortSignal.timeout(60000),
+        });
+      } catch (error) {
+        const timedOut = error?.name === "TimeoutError" || error?.name === "AbortError";
+        return send(response, timedOut ? 504 : 502, { error: { code: timedOut ? "provider_timeout" : "provider_unavailable", message: timedOut ? "AI servis nije odgovorio na vrijeme." : "AI servis trenutno nije dostupan." } });
+      }
+      if (!upstream.ok) {
+        const status = upstream.status === 429 ? 429 : upstream.status === 401 ? 503 : 502;
+        const message = upstream.status === 429 ? "AI servis je privremeno ograničio broj zahtjeva." : upstream.status === 401 ? "API konfiguracija na serveru nije prihvaćena." : "AI servis nije mogao obraditi poruku.";
+        return send(response, status, { error: { code: "provider_error", message } });
+      }
+      const result = await upstream.json();
+      const reply = typeof result.output_text === "string"
+        ? result.output_text
+        : (result.output ?? []).flatMap((item) => item.content ?? []).filter((item) => item.type === "output_text").map((item) => item.text).join("\n");
+      if (!reply.trim()) return send(response, 502, { error: { code: "empty_provider_response", message: "AI servis nije vratio tekstualni odgovor." } });
+      return send(response, 200, { reply, model: chatModel });
+    } catch (error) {
+      const status = Number.isInteger(error.status) ? error.status : 500;
+      return send(response, status, { error: { code: status === 500 ? "internal_error" : "invalid_request", message: status === 500 ? "Poruka nije mogla biti obrađena." : error.message } });
+    }
   }
 
   if (request.method === "POST" && url.pathname === "/api/tasks") {
@@ -157,7 +244,7 @@ const server = createServer(async (request, response) => {
 server.listen(port, host, () => {
   console.log(`Ai Matrix API listening on http://${host}:${port}`);
   console.log(`SQLite database: ${databasePath}`);
-  console.log("Planning-only mode: module execution and AI providers are not configured.");
+  console.log(`AI chat provider: ${chatApiKey && chatModel ? chatModel : "not configured"}; Matrix modules are not connected.`);
 });
 
 function shutdown() {

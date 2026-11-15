@@ -45,4 +45,4 @@ The initial relational schema is in `database/schema.sql`. SQLite is suitable fo
 5. Add approval records and an auditable Agent System.
 6. Add remaining modules one at a time with access limits and result validation.
 
-This repository currently contains the Core prototype and design contracts. It does not claim that modules or hosted services are operational.
+The repository contains the Assistant interface, Core prototype, local planning/chat backend, and design contracts. Real chat requires a server-side API key and model setting. Specialized modules, agents, authentication, and public backend hosting are not operational yet. GitHub Pages serves only the static interface.

@@ -3,75 +3,85 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#080b14">
-  <meta name="description" content="Ai Matrix je vizija univerzalne AI platforme koja povezuje istraživanje, kreativnost i autonomne agente.">
-  <title>Ai Matrix — Universal Intelligence Platform</title>
-  <style>
-    :root{color-scheme:dark;--bg:#080b14;--panel:#101522;--line:#242b3b;--muted:#a6aec1;--text:#f4f6ff;--cyan:#73e4ef;--violet:#a997ff;--mint:#9cf1d0}
-    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#1b2541 0,transparent 52%),var(--bg);color:var(--text);font:16px/1.6 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
-    a{color:inherit;text-decoration:none}.wrap{width:min(1120px,calc(100% - 40px));margin-inline:auto}.nav{height:76px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ffffff12}.brand{display:flex;align-items:center;gap:11px;font-weight:750;letter-spacing:.08em}.brand-mark{width:32px;height:32px;border:1px solid #73e4ef88;border-radius:10px;display:grid;place-items:center;color:var(--cyan);box-shadow:0 0 20px #73e4ef22;font-size:18px}.nav-links{display:flex;gap:28px;color:var(--muted);font-size:14px}.nav-links a:hover{color:var(--text)}
-    .hero{padding:104px 0 84px;text-align:center;position:relative;overflow:hidden}.eyebrow{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);font-weight:700}.hero h1{font-size:clamp(46px,8vw,88px);line-height:1.02;letter-spacing:-.065em;margin:20px 0 14px}.hero h1 span{background:linear-gradient(100deg,var(--cyan),#c0b5ff 72%);-webkit-background-clip:text;background-clip:text;color:transparent}.tagline{color:#d8def0;font-size:clamp(15px,2vw,20px);letter-spacing:.12em}.intro{max-width:650px;margin:24px auto 30px;color:var(--muted);font-size:17px}.actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}.button{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:11px 19px;font-weight:650;font-size:14px;transition:.2s}.primary{background:var(--cyan);color:#071015}.primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px #73e4ef33}.secondary{border:1px solid #ffffff26;color:#e7eaf5}.secondary:hover{border-color:var(--cyan)}
-    .signal{margin:14px auto 0;max-width:650px;font-size:12px;color:#8993a9}.section{padding:55px 0}.section-head{max-width:680px;margin-bottom:28px}.section h2{font-size:clamp(27px,4vw,40px);line-height:1.15;letter-spacing:-.035em;margin:8px 0 10px}.section-head p,.copy{color:var(--muted);margin:0}.architecture{border:1px solid var(--line);border-radius:22px;background:linear-gradient(145deg,#121827dd,#0d111b);padding:26px;position:relative;overflow:hidden}.core{width:min(320px,100%);margin:0 auto 24px;text-align:center;padding:18px;border:1px solid #73e4ef63;border-radius:16px;background:#73e4ef0a;box-shadow:0 0 45px #73e4ef0b}.core small{color:var(--cyan);letter-spacing:.17em;text-transform:uppercase;font-size:10px;font-weight:700}.core h3{margin:2px 0;font-size:20px}.core p{margin:0;color:var(--muted);font-size:13px}.modules{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.module{border:1px solid var(--line);border-radius:14px;padding:17px;background:#0a0e17b8;min-height:128px}.module .num{font-size:10px;letter-spacing:.15em;color:var(--violet);font-weight:750}.module h3{font-size:15px;margin:4px 0}.module p{font-size:12px;line-height:1.5;color:var(--muted);margin:0}.interface{margin-top:14px;border:1px dashed #70809868;border-radius:12px;padding:12px;text-align:center;color:#ccd4e6;font-size:13px}.interface strong{color:var(--mint)}
-    .principles{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}.principle{border-top:1px solid var(--line);padding:15px 4px}.principle b{display:block;font-size:14px;margin-bottom:4px}.principle p{margin:0;color:var(--muted);font-size:12px}.roadmap{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.step{padding:20px;border-radius:16px;border:1px solid var(--line);background:#ffffff04}.step small{color:var(--cyan);font-weight:700;letter-spacing:.14em;text-transform:uppercase}.step h3{margin:7px 0;font-size:17px}.step p{margin:0;color:var(--muted);font-size:13px}.footer{margin-top:45px;border-top:1px solid #ffffff12;padding:24px 0 34px;color:#828ba0;font-size:12px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
-    @media(max-width:740px){.nav{height:64px}.nav-links{gap:14px;font-size:12px}.hero{padding:78px 0 58px}.modules{grid-template-columns:repeat(2,1fr)}.principles{grid-template-columns:repeat(2,1fr)}.roadmap{grid-template-columns:1fr}.architecture{padding:18px}}
-    @media(max-width:420px){.wrap{width:min(100% - 28px,1120px)}.nav-links a:last-child{display:none}.modules{grid-template-columns:1fr}.module{min-height:0}.hero h1{font-size:48px}.section{padding:40px 0}}
-  </style>
+  <meta name="theme-color" content="#090a10">
+  <meta name="description" content="AI Matrix Assistant — centralno mjesto za razgovor, učenje, istraživanje i stvaranje.">
+  <title>AI Matrix — Assistant</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/app.js"></script>
 </head>
 <body>
-  <header class="wrap nav">
-    <a class="brand" href="#top" aria-label="Ai Matrix početna"><span class="brand-mark" aria-hidden="true">✳</span><span>AI MATRIX</span></a>
-    <nav class="nav-links" aria-label="Glavna navigacija"><a href="#vizija">Vizija</a><a href="#arhitektura">Arhitektura</a><a href="#principi">Principi</a><a href="https://github.com/edinm2016/edinm2016.github.io/tree/main/docs">Dokumentacija</a></nav>
-  </header>
-  <main id="top">
-    <section class="hero wrap">
-      <div class="eyebrow">Ideje · tehnologija · kreativnost</div>
-      <h1>AI <span>MATRIX</span></h1>
-      <div class="tagline">UNIVERZALNA AI PLATFORMA</div>
-      <p class="intro">Jedinstven sistem koji povezuje inteligenciju, istraživanje i autonomne agente — modularan, povezan i napravljen da raste.</p>
-      <div class="actions"><a class="button primary" href="#arhitektura">Upoznaj arhitekturu <span aria-hidden="true">&nbsp;↓</span></a><a class="button secondary" href="https://github.com/edinm2016/edinm2016.github.io">Otvori projekat na GitHubu</a></div>
-      <p class="signal">Početna vizija projekta · sistem je u fazi planiranja i razvoja</p>
-    </section>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="/" aria-label="AI Matrix početna"><span class="brand-symbol">✳</span><span>AI <b>MATRIX</b></span></a>
+      <button class="new-chat" id="newChat"><span>＋</span> Novi razgovor <kbd>Ctrl K</kbd></button>
+      <nav class="side-nav" aria-label="Glavna navigacija">
+        <a class="nav-item active" href="/" aria-current="page"><span class="nav-icon">◉</span> AI Assistant</a>
+        <a class="nav-item" href="/overview.html#arhitektura"><span class="nav-icon">⌘</span> AI alati <span class="soon">6</span></a>
+      </nav>
+      <section class="history">
+        <div class="history-heading"><span>Nedavni razgovori</span><button class="icon-button small" id="searchToggle" aria-label="Pretraži historiju" title="Pretraži">⌕</button></div>
+        <input class="history-search hidden" id="historySearch" type="search" placeholder="Traži razgovore…" aria-label="Traži razgovore">
+        <div id="chatHistory" class="history-list"></div>
+        <p class="empty-history hidden" id="emptyHistory">Razgovori koje započneš pojavit će se ovdje.</p>
+      </section>
+      <div class="sidebar-bottom">
+        <a class="nav-item" href="/overview.html"><span class="nav-icon">⌁</span> O projektu</a>
+        <button class="nav-item" id="settingsOpen"><span class="nav-icon">⚙</span> Postavke</button>
+        <div class="profile"><div class="avatar">A</div><div><strong>AI Matrix</strong><small id="providerStatus">Provjera povezivanja…</small></div><span class="profile-menu">···</span></div>
+      </div>
+    </aside>
 
-    <section class="section wrap" id="vizija">
-      <div class="section-head"><div class="eyebrow">Vizija</div><h2>Jedna platforma.<br>Mnogo načina da napredujemo.</h2><p>Ai Matrix je zamišljen kao javno dostupna platforma u kojoj specijalizovani moduli dijele zajedničku inteligenciju i rade zajedno.</p></div>
-    </section>
+    <main class="main-panel">
+      <header class="topbar">
+        <button class="icon-button mobile-menu" id="menuToggle" aria-label="Otvori meni">☰</button>
+        <div class="workspace-title"><span class="online-dot" id="statusDot"></span><span id="topTitle">AI Assistant</span><span class="beta">BETA</span></div>
+        <div class="top-actions"><a class="top-link" href="/overview.html">O projektu</a><button class="icon-button" id="topSettings" aria-label="Postavke" title="Postavke">⚙</button></div>
+      </header>
 
-    <section class="section wrap" id="arhitektura">
-      <div class="section-head"><div class="eyebrow">Sistem u cjelini</div><h2>Arhitektura Ai Matrixa</h2><p>Matrix Core koordinira module. Matrix Interface povezuje njihove mogućnosti u jedinstveno iskustvo za korisnika.</p></div>
-      <div class="architecture">
-        <div class="core"><small>Centralna inteligencija</small><h3>Matrix Core</h3><p>Rezonovanje, koordinacija i povezivanje modula</p></div>
-        <div class="modules">
-          <article class="module"><span class="num">01</span><h3>Knowledge Engine</h3><p>Znanje, obrazovanje i organizacija informacija.</p></article>
-          <article class="module"><span class="num">02</span><h3>AI Research</h3><p>Istraživanje, analiza i podrška otkrićima.</p></article>
-          <article class="module"><span class="num">03</span><h3>Agent System</h3><p>AI agenti za zadatke, alate i saradnju.</p></article>
-          <article class="module"><span class="num">04</span><h3>Matrix Lab</h3><p>Programiranje, aplikacije i razvoj softvera.</p></article>
-          <article class="module"><span class="num">05</span><h3>Creative Engine</h3><p>Slike, film, dizajn, muzika i stvaralaštvo.</p></article>
-          <article class="module"><span class="num">06</span><h3>Data Intelligence</h3><p>Podaci, obrasci i predviđanja.</p></article>
+      <section class="chat-stage" id="chatStage">
+        <div class="welcome" id="welcome">
+          <div class="welcome-orb"><span>✳</span><i></i></div>
+          <p class="overline">TVOJ PROSTOR ZA IDEJE</p>
+          <h1>Šta ćemo danas<br><span>zajedno stvoriti?</span></h1>
+          <p class="welcome-copy">Razgovaraj, istražuj, uči ili započni novi projekat. Matrix je tu da ti pomogne napraviti sljedeći korak.</p>
+          <div class="suggestions">
+            <button class="suggestion" data-prompt="Objasni mi kako funkcionišu AI agenti, jednostavno i uz primjer."><span class="suggestion-icon violet">✧</span><span><b>Objasni mi nešto</b><small>Uči kroz jasan razgovor</small></span><span class="suggestion-arrow">↗</span></button>
+            <button class="suggestion" data-prompt="Pomozi mi da isplaniram novi kreativni projekat."><span class="suggestion-icon cyan">⌘</span><span><b>Isplaniraj projekat</b><small>Od ideje do prvih koraka</small></span><span class="suggestion-arrow">↗</span></button>
+            <button class="suggestion" data-prompt="Istraži prednosti i izazove korištenja obnovljive energije."><span class="suggestion-icon blue">⌕</span><span><b>Istraži neku temu</b><small>Uporedi ideje i mogućnosti</small></span><span class="suggestion-arrow">↗</span></button>
+            <button class="suggestion" data-prompt="Napiši kratak, ohrabrujući opis za moj novi projekat."><span class="suggestion-icon mint">✎</span><span><b>Počni stvarati</b><small>Tekst, ideje i još mnogo toga</small></span><span class="suggestion-arrow">↗</span></button>
+          </div>
         </div>
-        <div class="interface"><strong>Matrix Interface</strong> &nbsp;·&nbsp; Jedinstveno mjesto za korisnika</div>
-      </div>
-    </section>
+        <div class="messages hidden" id="messages" role="log" aria-live="polite" aria-label="Razgovor"></div>
+      </section>
 
-    <section class="section wrap" id="principi">
-      <div class="section-head"><div class="eyebrow">Temeljna pravila</div><h2>Građen da raste odgovorno</h2></div>
-      <div class="principles">
-        <div class="principle"><b>Javan pristup</b><p>Dostupnost za sve.</p></div>
-        <div class="principle"><b>Modularnost</b><p>Moduli se unapređuju zasebno.</p></div>
-        <div class="principle"><b>Povezanost</b><p>Moduli razmjenjuju informacije.</p></div>
-        <div class="principle"><b>Skalabilnost</b><p>Novi modeli i agenti se mogu dodavati.</p></div>
-        <div class="principle"><b>Sigurnost</b><p>Privatnost, pristup i provjera zadataka.</p></div>
-      </div>
-    </section>
+      <footer class="composer-wrap">
+        <form class="composer" id="chatForm">
+          <div id="attachmentArea" class="attachment-area hidden"></div>
+          <textarea id="messageInput" rows="1" maxlength="20000" placeholder="Pošalji poruku AI Matrixu…" aria-label="Poruka za AI Matrix" required></textarea>
+          <div class="composer-tools">
+            <div class="tool-left">
+              <label class="attach-button" for="fileInput" title="Dodaj tekstualnu datoteku">＋ <span>Dodaj datoteku</span></label>
+              <input id="fileInput" type="file" accept=".txt,.md,.csv,.json,text/plain,text/markdown,text/csv,application/json" multiple hidden>
+              <span class="composer-hint">AI može pogriješiti. Provjeri važne informacije.</span>
+            </div>
+            <button class="send-button" id="sendButton" type="submit" aria-label="Pošalji poruku" title="Pošalji poruku">↑</button>
+          </div>
+          <label class="attachment-consent hidden" id="attachmentConsent"><input type="checkbox" id="attachmentCheck"> Razumijem da će sadržaj dodatih fajlova biti poslan AI provajderu uz poruku.</label>
+        </form>
+        <div class="footer-note"><span class="lock-icon">◇</span> Historija ostaje u ovom pregledniku; poslane poruke obrađuje povezani AI provajder. <a href="/overview.html">Saznaj više</a></div>
+      </footer>
+    </main>
+  </div>
 
-    <section class="section wrap">
-      <div class="section-head"><div class="eyebrow">Put razvoja</div><h2>Od jasne osnove do funkcionalne platforme</h2><p>Prvo oblikujemo sistem, zatim gradimo njegove dijelove i povezujemo ih u cjelinu.</p></div>
-      <div class="roadmap">
-        <article class="step"><small>Korak 01</small><h3>Definisati osnovu</h3><p>Tehnička arhitektura, opseg modula i pravila projekta.</p></article>
-        <article class="step"><small>Korak 02</small><h3>Izgraditi Matrix Core</h3><p>Razviti centralnu koordinaciju i temeljne servise.</p></article>
-        <article class="step"><small>Korak 03</small><h3>Povezati module</h3><p>Dodavati istraživanje, agente, kreativne alate i interfejs.</p></article>
-      </div>
+  <div class="modal-backdrop hidden" id="settingsModal" role="presentation">
+    <section class="settings-modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+      <div class="modal-header"><div><p class="overline">MATRIX CONTROL</p><h2 id="settingsTitle">Postavke</h2></div><button class="icon-button" id="settingsClose" aria-label="Zatvori postavke">×</button></div>
+      <div class="setting-block"><h3>AI povezivanje</h3><p class="setting-desc" id="settingsConnection">Provjeravam status servisa…</p><div class="connection-row"><span class="online-dot" id="settingsDot"></span><span id="settingsModel">Status nije dostupan</span></div><p class="setting-footnote">API ključ se čuva samo na serverskoj strani. Za uključivanje asistenta konfiguriraj <code>OPENAI_API_KEY</code> i <code>MATRIX_MODEL</code> na backend serveru.</p></div>
+      <div class="setting-block"><h3>Stil odgovora</h3><p class="setting-desc">Odaberi koliko detaljni odgovori trebaju biti.</p><select id="responseStyle"><option value="balanced">Uravnotežen</option><option value="concise">Sažet</option><option value="detailed">Detaljan</option></select></div>
+      <div class="setting-block"><h3>Markdown odgovori</h3><p class="setting-desc">Prikaži naslove, liste i kod u odgovorima.</p><label class="switch-row"><span>Formatiraj odgovore</span><input type="checkbox" id="markdownToggle" checked></label></div>
+      <div class="modal-footer"><a href="/overview.html#arhitektura">Pogledaj arhitekturu Matrixa ↗</a><button class="button-primary" id="settingsDone">Sačuvaj postavke</button></div>
     </section>
-  </main>
-  <footer class="wrap footer"><span>© 2026 Ai Matrix</span><span><a href="https://github.com/edinm2016/edinm2016.github.io">Izvorni kod i dokumentacija</a> · Ideje postaju sistemi.</span></footer>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
 </body>
 </html>

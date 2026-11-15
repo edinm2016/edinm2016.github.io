@@ -1,6 +1,10 @@
 # Initial Backend API Contract
 
-All endpoints use JSON. The local server implements `/health`, task creation, and task reads. Authentication, module execution, cancellation, and the approval endpoint below remain part of the proposed contract and are not implemented.
+All endpoints use JSON. The local server implements `/health`, `/api/config`, task creation/reads, and chat completion when configured. Authentication, module execution, cancellation, and the approval endpoint below remain part of the proposed contract and are not implemented.
+
+## Chat with AI Assistant
+
+`POST /api/chat` with `{ "messages": [{"role":"user","content":"Hello"}], "response_style":"balanced" }`. Returns `{ "reply": "...", "model": "..." }`. The backend sends messages to the configured Responses-compatible provider and keeps its API key off the client. `GET /api/config` returns only the readiness flag and model name; it never returns credentials.
 
 ## Create a task
 
